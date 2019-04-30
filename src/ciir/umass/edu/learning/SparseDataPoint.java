@@ -22,7 +22,6 @@ public class SparseDataPoint extends DataPoint {
 
     private static accessPattern searchPattern = accessPattern.RANDOM;
 
-    ;
     // The feature ids for known values
     int fIds[];
 
@@ -49,11 +48,15 @@ public class SparseDataPoint extends DataPoint {
      *
      * @param fVals The feature values, starting at index 1.
      * @param fIds  The feature IDs, starting at index 1.
+     * @param queryId The ID of the query this datapoint is associated with.
+     * @param relevanceLabel The relevance label of this datapoint with respect to the query.
      */
-    public SparseDataPoint(float[] fVals, int[] fIds) {
+    public SparseDataPoint(float[] fVals, int[] fIds, String queryId, float relevanceLabel) {
         this.fVals = fVals;
         this.fIds = fIds;
         this.knownFeatures = fIds[fIds.length - 1];
+        this.id = queryId;
+        this.label = relevanceLabel;
     }
 
     public SparseDataPoint(SparseDataPoint dp) {
