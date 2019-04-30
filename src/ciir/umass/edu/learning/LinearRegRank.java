@@ -49,8 +49,15 @@ public class LinearRegRank extends Ranker {
 		/*int nSample = 0;
 		for(int i=0;i<samples.size();i++)
 			nSample += samples.get(i).size();*/
-		int nVar = DataPoint.getFeatureCount();
-		
+		int nVar = 0;
+		for (RankList rl : samples) {
+			for (int i = 0; i < rl.size(); i++) {
+				final DataPoint dp = rl.get(i);
+				if (nVar < dp.getNumberOfKnownFeatures())
+					nVar = dp.getNumberOfKnownFeatures();
+			}
+		}
+
 		double[][] xTx = new double[nVar][];
 		for(int i=0;i<nVar;i++)
 		{

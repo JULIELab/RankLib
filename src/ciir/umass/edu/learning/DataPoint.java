@@ -24,8 +24,7 @@ public abstract class DataPoint {
 	public static boolean missingZero = false;
 	public static int MAX_FEATURE = 51;
 	public static int FEATURE_INCREASE = 10;
-	protected static int featureCount = 0;
-	
+
 	protected static float UNKNOWN = Float.NaN;
 	
 	//attributes
@@ -97,9 +96,6 @@ public abstract class DataPoint {
 					fVals = tmp;
 				}
 				fVals[f] = Float.parseFloat(val);
-				
-				if(f > featureCount)//#feature will be the max_id observed
-					featureCount = f;
 				
 				if(f > lastFeature)//note that lastFeature is the max_id observed for this current data point, whereas featureCount is the max_id observed on the entire dataset
 					lastFeature = f;
@@ -203,9 +199,8 @@ public abstract class DataPoint {
 		output += " " + description;
 		return output;
 	}
-	
-	public static int getFeatureCount()
-	{
-		return featureCount;
-	}	
+
+	public int getNumberOfKnownFeatures() {
+		return knownFeatures;
+	}
 }

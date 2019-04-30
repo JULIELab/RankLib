@@ -55,4 +55,14 @@ public class Normalizer {
 		//need overriding in subclass
 		return "";
 	}
+
+	public int numFeatures(RankList rl) {
+		int knownFeatures = 0;
+		for (int i = 0; i < rl.size(); i++) {
+			final int features = rl.get(i).getNumberOfKnownFeatures();
+			if (knownFeatures < features)
+				knownFeatures = features;
+		}
+		return knownFeatures;
+	}
 }
