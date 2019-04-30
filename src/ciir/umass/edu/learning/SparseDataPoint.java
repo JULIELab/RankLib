@@ -41,6 +41,24 @@ public class SparseDataPoint extends DataPoint {
 		super(text);
 	}
 
+    /**
+     * <p>Allows the direct allocation of a SparseDataPoint instead of having it parse text.</p>
+     * <p>The fVals array represents the sparse feature values. Only non-null values must be specified. fVals[0] is
+     * unused, the feature values need to start at index 1.</p>
+     * <p>The fIds array has equal length to fVals and specifies for each position the feature ID that this position
+     * in both array stands for. Thus, if fIds[1] == '5' then fVals[5] is the value of this data point for feature
+     * number 5. Here also the index 0 is unused. The values in fIds must be sorted ascendingly.</p>
+     * @param fVals The feature values, starting at index 1.
+     * @param fIds The feature IDs, starting at index 1.
+     */
+	public SparseDataPoint(float[] fVals, int[] fIds) {
+		this.fVals = fVals;
+		this.fIds = fIds;
+		this.knownFeatures = fIds[fIds.length - 1];
+		if (knownFeatures > featureCount)
+            featureCount = knownFeatures;
+	}
+
 	public SparseDataPoint(SparseDataPoint dp)
  	{
 		label = dp.label;
