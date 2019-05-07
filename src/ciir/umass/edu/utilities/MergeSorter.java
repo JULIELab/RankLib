@@ -126,7 +126,7 @@ public class MergeSorter {
 		while(j <= e2)
 			tmp[k++] = idx[j++];
 	}
-	
+
 	public static int[] sort(double[] list, boolean asc)
 	{
 		return sort(list, 0, list.length-1, asc);
