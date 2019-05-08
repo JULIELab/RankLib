@@ -56,7 +56,7 @@ public class CoorAscent extends Ranker {
 	
 	public void init()
 	{
-		PRINT("Initializing... ");
+		PRINT("Initializing with " + features.length + " features... ");
 		weight = new double[features.length];
 		Arrays.fill(weight, 1.0 / features.length);
 		PRINTLN("[Done]");
@@ -397,7 +397,7 @@ public class CoorAscent extends Ranker {
 		weight = new double[features.length];
 		if(ranker.weight.length != weight.length)
 		{
-			System.out.println("These two models use different feature set!!");
+			System.out.println("These two models use different feature sets!!");
 			System.exit(1);
 		}
 		copy(ranker.weight, weight);
