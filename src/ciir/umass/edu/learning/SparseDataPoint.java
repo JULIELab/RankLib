@@ -40,14 +40,13 @@ public class SparseDataPoint extends DataPoint {
 
     /**
      * <p>Allows the direct allocation of a SparseDataPoint instead of having it parse text.</p>
-     * <p>The fVals array represents the sparse feature values. Only non-null values must be specified. fVals[0] is
-     * unused, the feature values need to start at index 1.</p>
+     * <p>The fVals array represents the sparse feature values. Only non-null values must be specified.</p>
      * <p>The fIds array has equal length to fVals and specifies for each position the feature ID that this position
      * in both array stands for. Thus, if fIds[1] == '5' then fVals[5] is the value of this data point for feature
-     * number 5. Here also the index 0 is unused. The values in fIds must be sorted ascendingly.</p>
+     * number 5. The values in fIds must be sorted ascendingly.</p>
      *
-     * @param fVals The feature values, starting at index 1.
-     * @param fIds  The feature IDs, starting at index 1.
+     * @param fVals The feature values, starting at index 0.
+     * @param fIds  The feature IDs, starting at index 0.
      * @param queryId The ID of the query this datapoint is associated with.
      * @param relevanceLabel The relevance label of this datapoint with respect to the query.
      */
@@ -97,7 +96,7 @@ public class SparseDataPoint extends DataPoint {
     @Override
     public float getFeatureValue(int fid) {
         //long time = System.nanoTime();
-        if (fid <= 0 || fid > knownFeatures) {
+        if (fid <= 0 || fid > fIds[fIds.length-1]) {
             if (missingZero) return 0f;
             throw RankLibError.create("Error in SparseDataPoint::getFeatureValue(): requesting unspecified feature, fid=" + fid);
         }
