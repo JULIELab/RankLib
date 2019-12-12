@@ -197,7 +197,7 @@ public abstract class DataPoint {
 			if(!isUnknown(fVals[i]))
 				output += i + ":" + fVals[i] + ((i==fVals.length-1)?"":" ");
 		output += " " + description;
-		return output;
+		return output.trim();
 	}
 
 	public int getNumberOfKnownFeatures() {

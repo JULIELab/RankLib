@@ -26,6 +26,8 @@ public class SparseDataPointTest {
         assertEquals(4f, sdp.getFeatureValue(1), 0f);
         assertEquals(9f, sdp.getFeatureValue(4), 0f);
         assertEquals(1f, sdp.getFeatureValue(10), 0f);
+
+        assertEquals("0 qid:0 1:4.0 4:9.0 10:1.0", sdp.toString());
     }
 
     @Test

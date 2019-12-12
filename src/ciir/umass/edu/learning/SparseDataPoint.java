@@ -126,7 +126,7 @@ public class SparseDataPoint extends DataPoint {
 
     @Override
     public float[] getFeatureVector() {
-        float[] dfVals = new float[fIds[knownFeatures - 1]];
+        float[] dfVals = new float[fIds[knownFeatures - 1]+1];
         Arrays.fill(dfVals, UNKNOWN);
         for (int i = 0; i < knownFeatures; i++)
             dfVals[fIds[i]] = fVals[i];
