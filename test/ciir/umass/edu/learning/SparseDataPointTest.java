@@ -30,7 +30,7 @@ public class SparseDataPointTest {
 
     @Test
     public void getFeatureValue() {
-        final SparseDataPoint sdp = new SparseDataPoint(new float[]{Float.NaN, .1f, .2f, .3f, .4f}, new int[]{0, 2, 5, 13, 22}, "1", 0);
+        final SparseDataPoint sdp = new SparseDataPoint(new float[]{.1f, .2f, .3f, .4f}, new int[]{2, 5, 13, 22}, "1", 0);
         assertTrue(sdp.hasFeature(2));
         assertTrue(sdp.hasFeature(5));
         assertTrue(sdp.hasFeature(13));

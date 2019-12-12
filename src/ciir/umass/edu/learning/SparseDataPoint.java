@@ -53,7 +53,7 @@ public class SparseDataPoint extends DataPoint {
     public SparseDataPoint(float[] fVals, int[] fIds, String queryId, float relevanceLabel) {
         this.fVals = fVals;
         this.fIds = fIds;
-        this.knownFeatures = fIds[fIds.length - 1];
+        this.knownFeatures = fIds[fIds.length-1];
         this.id = queryId;
         this.label = relevanceLabel;
     }
