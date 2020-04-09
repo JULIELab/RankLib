@@ -4,10 +4,12 @@
 
     <groupId>de.julielab</groupId>
     <artifactId>RankLib</artifactId>
-    <version>2.11-SNAPSHOT</version>
+    <version>2.11</version>
     <description>This is a copy of the original RankLib from the Lemur project
         (https://sourceforge.net/p/lemur/wiki/RankLib/). The copy serves as a possibility to create a Maven artifact
         uploaded to Maven central since the Lemur project doesn't provide Maven artifacts on central.
+        Additionally, changes have been made to use RankLib more easily as a library from the code of another
+        program. Also, for thread-safety, the static, global feature number counter is not used any more.
     </description>
 
     <parent>
