@@ -50,10 +50,10 @@ public class SparseDataPoint extends DataPoint {
      * @param queryId The ID of the query this datapoint is associated with.
      * @param relevanceLabel The relevance label of this datapoint with respect to the query.
      */
-    public SparseDataPoint(float[] fVals, int[] fIds, String queryId, float relevanceLabel) {
+    public SparseDataPoint(float[] fVals, int[] fIds, int numKnownFeatures, String queryId, float relevanceLabel) {
         this.fVals = fVals;
         this.fIds = fIds;
-        this.knownFeatures = fIds.length > 0 ? fIds[fIds.length-1] : 0;
+        this.knownFeatures = numKnownFeatures;
         this.id = queryId;
         this.label = relevanceLabel;
     }
