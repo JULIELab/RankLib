@@ -43,7 +43,7 @@ public class SparseDataPoint extends DataPoint {
      * <p>The fVals array represents the sparse feature values. Only non-null values must be specified.</p>
      * <p>The fIds array has equal length to fVals and specifies for each position the feature ID that this position
      * in both array stands for. Thus, if fIds[1] == '5' then fVals[5] is the value of this data point for feature
-     * number 5. The values in fIds must be sorted ascendingly.</p>
+     * number 5. The values in fIds must be sorted in an ascending manner.</p>
      *
      * @param fVals The feature values, starting at index 0.
      * @param fIds  The feature IDs, starting at index 0.
