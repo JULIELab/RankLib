@@ -81,10 +81,10 @@ public abstract class DataPoint {
 			String val = "";
 			for(int i=2;i<fs.length;i++)
 			{
-				knownFeatures++;
 				key = getKey(fs[i]);
 				val = getValue(fs[i]);
 				int f = Integer.parseInt(key);
+				knownFeatures = Math.max(f, knownFeatures);
 				if(f <= 0) throw RankLibError.create("Cannot use feature numbering less than or equal to zero. Start your features at 1.");
 				if(f >= MAX_FEATURE)
 				{
