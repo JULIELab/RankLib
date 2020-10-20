@@ -49,8 +49,15 @@ public class LinearRegRank extends Ranker {
 		/*int nSample = 0;
 		for(int i=0;i<samples.size();i++)
 			nSample += samples.get(i).size();*/
-		int nVar = DataPoint.getFeatureCount();
-		
+		int nVar = 0;
+		for (RankList rl : samples) {
+			for (int i = 0; i < rl.size(); i++) {
+				final DataPoint dp = rl.get(i);
+				if (nVar < dp.getNumberOfKnownFeatures())
+					nVar = dp.getNumberOfKnownFeatures();
+			}
+		}
+
 		double[][] xTx = new double[nVar][];
 		for(int i=0;i<nVar;i++)
 		{
@@ -113,7 +120,7 @@ public class LinearRegRank extends Ranker {
 	}
 	public String toString()
 	{
-		String output = "0:" + weight[0] + " ";		
+		String output = "";
 		for(int i=0;i<features.length;i++)
 			output += features[i] + ":" + weight[i] + ((i==weight.length-1)?"":" ");
 		return output;
@@ -149,7 +156,7 @@ public class LinearRegRank extends Ranker {
 			List<String> keys = kvp.keys();
 			List<String> values = kvp.values();
 			weight = new double[keys.size()];
-			features = new int[keys.size()-1];//weight = <weight for each feature, constant>
+			features = new int[keys.size()];//weight = <weight for each feature, constant>
 			int idx = 0;
 			for(int i=0;i<keys.size();i++)
 			{

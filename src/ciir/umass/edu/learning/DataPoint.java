@@ -24,8 +24,7 @@ public abstract class DataPoint {
 	public static boolean missingZero = false;
 	public static int MAX_FEATURE = 51;
 	public static int FEATURE_INCREASE = 10;
-	protected static int featureCount = 0;
-	
+
 	protected static float UNKNOWN = Float.NaN;
 	
 	//attributes
@@ -82,10 +81,10 @@ public abstract class DataPoint {
 			String val = "";
 			for(int i=2;i<fs.length;i++)
 			{
-				knownFeatures++;
 				key = getKey(fs[i]);
 				val = getValue(fs[i]);
 				int f = Integer.parseInt(key);
+				knownFeatures = Math.max(f, knownFeatures);
 				if(f <= 0) throw RankLibError.create("Cannot use feature numbering less than or equal to zero. Start your features at 1.");
 				if(f >= MAX_FEATURE)
 				{
@@ -97,9 +96,6 @@ public abstract class DataPoint {
 					fVals = tmp;
 				}
 				fVals[f] = Float.parseFloat(val);
-				
-				if(f > featureCount)//#feature will be the max_id observed
-					featureCount = f;
 				
 				if(f > lastFeature)//note that lastFeature is the max_id observed for this current data point, whereas featureCount is the max_id observed on the entire dataset
 					lastFeature = f;
@@ -201,11 +197,10 @@ public abstract class DataPoint {
 			if(!isUnknown(fVals[i]))
 				output += i + ":" + fVals[i] + ((i==fVals.length-1)?"":" ");
 		output += " " + description;
-		return output;
+		return output.trim();
 	}
-	
-	public static int getFeatureCount()
-	{
-		return featureCount;
-	}	
+
+	public int getNumberOfKnownFeatures() {
+		return knownFeatures;
+	}
 }

@@ -295,10 +295,6 @@ public class FeatureManager {
 
 	/**
 	 * Obtain all features present in a sample set. 
-	 * Important: If your data (DataPoint objects) is loaded by RankLib (e.g. command-line use) or its APIs, there 
-         *              is nothing to watch out for.
-	 *            If you create the DataPoint objects yourself, make sure DataPoint.featureCount correctly reflects
-         *              the total number features present in your dataset.
 	 * @param samples
 	 * @return
 	 */
@@ -309,10 +305,18 @@ public class FeatureManager {
 			throw RankLibError.create("Error in FeatureManager::getFeatureFromSampleVector(): There are no training samples.");
 		}
 
-		int fc = DataPoint.getFeatureCount();
-		int[] features = new int[fc];
+		int knownFeatures = 0;
+		for (RankList rl : samples) {
+			for (int i = 0; i < rl.size(); i++) {
+				final DataPoint dp = rl.get(i);
+				if (knownFeatures < dp.getNumberOfKnownFeatures())
+                    knownFeatures = dp.getNumberOfKnownFeatures();
+			}
+		}
 
-		for(int i=1;i<=fc;i++)
+		int[] features = new int[knownFeatures];
+
+		for(int i=1;i<=knownFeatures;i++)
 			features[i-1] = i;
 
 		return features;
