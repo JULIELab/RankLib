@@ -12,35 +12,46 @@ package ciir.umass.edu.learning;
 import ciir.umass.edu.utilities.RankLibError;
 
 import java.util.Arrays;
-import java.util.function.Predicate;
-import java.util.stream.DoubleStream;
 import java.util.stream.IntStream;
-import java.util.stream.Stream;
 
 /**
  * Implements a sparse data point using a compressed sparse row data structure
- *
  * @author Siddhartha Bagaria
  */
 public class SparseDataPoint extends DataPoint {
 
+    // Access pattern of the feature values
+    private enum accessPattern {SEQUENTIAL, RANDOM};
     private static accessPattern searchPattern = accessPattern.RANDOM;
-
-    // The feature ids for known values
-    int fIds[];
 
     // Profiling variables
     // private static int numCalls = 0;
     // private static float avgTime = 0;
-    // Internal search optimizers. Currently unused.
-    int lastMinId = -1;
+
+    // The feature ids for known values
+    int fIds[];
 
     // The feature values for corresponding Ids
     //float fVals[]; //moved to the parent class
+
+    // Internal search optimizers. Currently unused.
+    int lastMinId = -1;
     int lastMinPos = -1;
 
     public SparseDataPoint(String text) {
         super(text);
+    }
+
+    public SparseDataPoint(SparseDataPoint dp)
+    {
+        label = dp.label;
+        id = dp.id;
+        description = dp.description;
+        cached = dp.cached;
+        fIds = new int[dp.fIds.length];
+        fVals = new float[dp.fVals.length];
+        System.arraycopy(dp.fIds, 0, fIds, 0, dp.fIds.length);
+        System.arraycopy(dp.fVals, 0, fVals, 0, dp.fVals.length);
     }
 
     /**
@@ -55,7 +66,8 @@ public class SparseDataPoint extends DataPoint {
      * @param queryId        The ID of the query this datapoint is associated with.
      * @param relevanceLabel The relevance label of this datapoint with respect to the query.
      */
-    public SparseDataPoint(float[] fVals, int[] fIds, int numKnownFeatures, String queryId, float relevanceLabel) {
+    public SparseDataPoint(float[] fVals, int[] fIds, int numKnownFeatures, String queryId, float relevanceLabel)
+    {
         this.fVals = fVals;
         this.fIds = fIds;
         this.knownFeatures = numKnownFeatures;
@@ -63,20 +75,11 @@ public class SparseDataPoint extends DataPoint {
         this.label = relevanceLabel;
     }
 
-    public SparseDataPoint(SparseDataPoint dp) {
-        label = dp.label;
-        id = dp.id;
-        description = dp.description;
-        cached = dp.cached;
-        fIds = new int[dp.fIds.length];
-        fVals = new float[dp.fVals.length];
-        System.arraycopy(dp.fIds, 0, fIds, 0, dp.fIds.length);
-        System.arraycopy(dp.fVals, 0, fVals, 0, dp.fVals.length);
-    }
-
     private int locate(int fid) {
-        if (searchPattern == accessPattern.SEQUENTIAL) {
-            if (lastMinId > fid) {
+        if (searchPattern == accessPattern.SEQUENTIAL)
+        {
+            if (lastMinId > fid)
+            {
                 lastMinId = -1;
                 lastMinPos = -1;
             }
@@ -84,11 +87,14 @@ public class SparseDataPoint extends DataPoint {
                 lastMinId = fIds[++lastMinPos];
             if (lastMinId == fid)
                 return lastMinPos;
-        } else if (searchPattern == accessPattern.RANDOM) {
+        }
+        else if (searchPattern == accessPattern.RANDOM)
+        {
             int pos = Arrays.binarySearch(fIds, fid);
             if (pos >= 0)
                 return pos;
-        } else
+        }
+        else
             System.err.println("Invalid search pattern specified for sparse data points.");
 
         return -1;
@@ -99,9 +105,11 @@ public class SparseDataPoint extends DataPoint {
     }
 
     @Override
-    public float getFeatureValue(int fid) {
+    public float getFeatureValue(int fid)
+    {
         //long time = System.nanoTime();
-        if (fid <= 0 || fid > knownFeatures) {
+        if(fid <= 0 || fid > knownFeatures)
+        {
             if (missingZero) return 0f;
             throw RankLibError.create("Error in SparseDataPoint::getFeatureValue(): requesting unspecified feature, fid=" + fid);
         }
@@ -109,37 +117,33 @@ public class SparseDataPoint extends DataPoint {
         //long completedIn = System.nanoTime() - time;
         //avgTime = (avgTime*numCalls + completedIn)/(++numCalls);
         //System.out.println("getFeatureValue average time: "+avgTime);
-        if (pos >= 0)
+        if(pos >= 0)
             return fVals[pos];
 
         return 0; // Should ideally be returning unknown?
     }
 
     @Override
-    public void setFeatureValue(int fid, float fval) {
-        if (fid <= 0 || fid > knownFeatures) {
+    public void setFeatureValue(int fid, float fval)
+    {
+        if(fid <= 0 || fid > knownFeatures)
+        {
             throw RankLibError.create("Error in SparseDataPoint::setFeatureValue(): feature (id=" + fid + ") out of range.");
         }
         int pos = locate(fid);
-        if (pos >= 0)
+        if(pos >= 0)
             fVals[pos] = fval;
-        else {
+        else
+        {
             System.err.println("Error in SparseDataPoint::setFeatureValue(): feature (id=" + fid + ") not found.");
             System.exit(1);
         }
     }
 
     @Override
-    public float[] getFeatureVector() {
-        float[] dfVals = new float[knownFeatures+1];
-        Arrays.fill(dfVals, UNKNOWN);
-        for (int i = 0; i < fIds.length; i++)
-            dfVals[fIds[i]] = fVals[i];
-        return dfVals;
-    }
-
-    @Override
-    public void setFeatureVector(float[] dfVals) {
+    public void setFeatureVector(float[] dfVals)
+    {
+        // Changed by EF in the JULIE Lab to avoid the usage of the static 'featureCount' field
         int numPresentFeatures = (int) IntStream.range(0, dfVals.length).mapToDouble(i -> dfVals[i]).filter(val -> !Double.isNaN(val) && val != 0).count();
         fIds = new int[numPresentFeatures];
         fVals = new float[numPresentFeatures];
@@ -154,8 +158,13 @@ public class SparseDataPoint extends DataPoint {
         assert (pos == numPresentFeatures);
     }
 
-    // Access pattern of the feature values
-    private enum accessPattern {
-        SEQUENTIAL, RANDOM
+    @Override
+    public float[] getFeatureVector() {
+        // Changed by EF in the JULIE Lab because position 0 is unused (note how 'setFeatureVector' starts with fId 1)
+        float[] dfVals = new float[knownFeatures + 1];
+        Arrays.fill(dfVals, UNKNOWN);
+        for (int i = 0; i < fIds.length; i++)
+            dfVals[fIds[i]] = fVals[i];
+        return dfVals;
     }
 }

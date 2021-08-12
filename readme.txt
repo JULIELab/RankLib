@@ -1,97 +1,26 @@
-Date:		December, 2018.
-Version:	2.11
+Date:		June, 2021.
+Version:	2.16
 ======================================
-
-========================
-v 2.3
-------
-- [bugfix] RankLib crashes when #features < #threads with some algorithms.
-- [bugfix] Normalization issue with RankBoost (the command "-test <test-data> -load <RB-model-file> -norm zscore/sum" incorrectly normalizes the test data).
-- [bugfix] Reciprocal rank is always measured off the entire ranked list, regardless of the specified cut-off point.
-- [bugfix] MAP change when swaping two documents in a ranked list is incorrect. This only affects LambdaMART trained with MAP. It doesn't seem to have any significant impact on model effectiveness though.
-- Slight efficiency improvement.
-- RankLib can now be used to evaluate (well, kind of) models trained using other LTR software packages (e.g. SVM-Rank)
-- Siddhartha Bagaria's patch for sparse dataset is included but not yet fully enabled since it's not thread-safe.
-- Linear regression (L2 norm) should now work properly
-
-========================
-v 2.2
-------
-- Proper support for k-fold cross-validation (cv models can now be... saved!!! support random partitions in addition to sequential partitions)
-- Help compare different models (i.e. how much gain? win/loss? statistically significant? improvement/hurt analysis).
-- Add "linear" (Min/Max) feature normalization. ( q->D={d1,d2,...,d_n}; F={f1,f2,...,fm}; fk_di = (fk_di - min_fk_all_d_in_D) / (max_fk_all_d_in_D - min_fk_all_d_in_D) ).
-- Coordinate Ascent now takes into account validation data just like all other algorithms (though Coordinate Ascent usually works well without validation data)
-- Default value for #nRestart (Coordinate Ascent) is changed to 5 (increasing it might give better results, but training will take longer)
-- [Bugfix] Feature normalization: RankLib sometimes doesn't do normalization even when it is told to do so.
-- [Bugfix] Certain combinations of #features/#samples and #cpu-cores screwed up my multi-threaded implementatin of LambdaMART, causing the algorithm to underperform.
-- [Bugfix] LambdaMART's occasional crashes.
-- [Bugfix] RankLib crashes if the comment text associated with each feature vector contains additional "#" (other than the "#" used to specify a comment)
-- Internal class/package re-arrangement (expect minor code change if you're using RankLib codes programatically)
-
-(personal reminder)
-- [Beta] Sparse feature vector: work properly, but its benefit has NOT been evaluated (slow down vs. memory gain? -- might be useless at the moment!)
-- [Beta] Added L2 linear regression (NOT yet tested).
-
-
-========================
-v 2.1
-------
-- Add ListNet.
-- Add Random Forest.
-- With little manual work, it can do BagBoo/Bagging LambaMART too.
-- For my personal use only: add support for 
-  (1) external relevance judgment file [-qrel]
-  (2) output ranking in indri run file format (not exposed via cmd parameters) [-indri][requires doc-ID stored for each feature vector]
-  (3) ignore ranked list without any relevant document [-hr]
-
-========================
-v 2.0
-------
-- Add MART
-- Add LambdaMART
-- Change the calculation of NDCG to the standard version: (2^{rel_i} - 1) / log_{2} (i+1). Therefore, the absolute NDCG score might be slightly lower than before.
-- Add zscore normalization.
-- Fix the divide-by-zero bug related to the sum normalization ( q->D={d1,d2,...,d_n}; F={f1,f2,...,fm}; fk_di = fk_di / sum_{dj \in D} |fk_dj| ).
-(I do not claim that these normalization methods are good -- in fact, I think it's a better idea for you to normalize your own data using your favorate method)
-- Add the ability to split the training file to x% train and (100-x)% validation (previous version only allows train/test split, not train/validation).
-- Add some minor cmd-line parameters.
-- Some cmd-line parameter string have been changed.
-- Internal code clean up for slight improvement in efficiency/speed.
-
-========================
-v 1.2.1
-------
-- Fix the error with sparse train/test/validate file (with v 1.1, when we do not specify feature whose value is 0, the system crashes in some cases)
-- Speedup RankNet using batch learning + add some tricks (see the LambdaRank paper for details).
-- Change default epochs to 50 for RankNet.
-- Fix a bug related to RankBoost not dealing properly with features whose values are negative.
-
-========================
-v 1.1
-------
-- Change data types in some classes to reduce the amount of memory use. Thus this version can work with larger dataset.
-- Rearrange packages
-- Change some functions' name
-
-========================
-v 1.0
-------
-This is the first version of RankLib.
-
 ======================================
 1. OVERVIEW
 
-RankLib is a library for comparing different ranking algorithms. In the current version:
-- Algorithms: MART, RankNet, RankBoost, AdaRank, Coordinate Ascent, LambdaMART, ListNet and Random Forests.
-- Training data: it allow users to:
+RankLib is a library for comparing different ranking algorithms. In
+the current version: 
+- Algorithms: MART, RankNet, RankBoost, AdaRank, Coordinate Ascent,
+LambdaMART, ListNet and Random Forests. 
+- Training data: it allow users to: 
    + Specify train/test data separately
    + Automatically does train/test split from a single input file
-   + Do k-fold cross validation (only sequential split at the moment, NO RANDOM SPLIT)
-   + Allow users to specify validation set to guide the training process. It will pick the model that performs best on the validation data instead of the one on the training data. This is useful for easily overfitted algorithms like RankNet.
+   + Do k-fold cross validation (only sequential split at the moment,
+   NO RANDOM SPLIT) 
+   + Allow users to specify validation set to guide the training
+   process. It will pick the model that performs best on the
+   validation data instead of the one on the training data. This is
+   useful for easily overfitted algorithms like RankNet. 
    + ...
 - Evaluation metrics: MAP, NDCG@k, DCG@k, P@k, RR@k, ERR@k
 
-===============================================================================================================================================
+====================================================================
 2. HOW TO USE
 
 2.1. Binary
@@ -209,5 +138,3 @@ Here's an example: (taken from the SVM-Rank website). Note that everything after
 3 qid:3 1:1 2:1 3:0 4:0.3 5:0 # 3B 
 4 qid:3 1:1 2:0 3:0 4:0.4 5:1 # 3C 
 1 qid:3 1:0 2:1 3:1 4:0.5 5:0 # 3D
-
-

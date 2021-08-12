@@ -226,9 +226,9 @@ public class Evaluator {
 				rankerType = Integer.parseInt(args[++i]);
 			else if (args[i].equalsIgnoreCase ("-feature"))
 				featureDescriptionFile = args[++i];
-			else if (args[i].equalsIgnoreCase ("-metric2t"))
+			else if (args[i].equals ("-metric2t"))
 				trainMetric = args[++i];
-			else if (args[i].equalsIgnoreCase ("-metric2T"))
+			else if (args[i].equals ("-metric2T"))
 				testMetric = args[++i];
 			else if (args[i].equalsIgnoreCase ("-gmax"))
 				ERRScorer.MAX = Math.pow(2, Double.parseDouble(args[++i]));			

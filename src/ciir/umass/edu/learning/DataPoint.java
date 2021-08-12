@@ -97,7 +97,7 @@ public abstract class DataPoint {
 				}
 				fVals[f] = Float.parseFloat(val);
 				
-				if(f > lastFeature)//note that lastFeature is the max_id observed for this current data point, whereas featureCount is the max_id observed on the entire dataset
+				if(f > lastFeature)// NOTE: due to the changes made in the JULIE Lab, the former static field 'featureCount' does not exist anymore; original comment was: note that lastFeature is the max_id observed for this current data point, whereas featureCount is the max_id observed on the entire dataset
 					lastFeature = f;
 			}
 			//shrink fVals
